@@ -73,6 +73,7 @@ async function getUser(req, res, next) {
     let user;
     try {
       user = await User.findById(req.params.id);
+      console.log(user);
       if (user == null) {
         return res.status(404).json({ message: "Cannot find User" });
       }
