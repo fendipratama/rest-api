@@ -1,3 +1,4 @@
+const { json } = require("express");
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
 
 //Get One
 router.get("/:id", getUser, (req, res) => {
-  res.json(res.user);
+    res.json(res.user);
 });
 
 //Create One
@@ -69,18 +70,17 @@ router.delete("/:id", getUser, async (req, res) => {
 
 //getUser middleware
 async function getUser(req, res, next) {
-  let user;
-  try {
-    user = await User.findById(req.params.id);
-    //console.log('usernya : ' + user);
-    if (user == null) {
-      return res.status(404).json({ message: "Cannot find User" });
+    let user;
+    try {
+      user = await User.findById(req.params.id);
+      if (user == null) {
+        return res.status(404).json({ message: "Cannot find User" });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
     }
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.user = user;
+    next();
   }
-  res.user = user;
-  next();
-}
 
 module.exports = router;
